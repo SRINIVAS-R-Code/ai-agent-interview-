@@ -63,7 +63,7 @@ export default function ResumeScreening({ initialRole, onStartInterview, onBack 
   const handleProceed = () => {
     onStartInterview({
       role,
-      n,
+      n: 25,
       jdContext: jdText,
       screeningResult: result,
       sessionId: null,
@@ -71,7 +71,7 @@ export default function ResumeScreening({ initialRole, onStartInterview, onBack 
   }
 
   return (
-    <div style={{ minHeight: '100vh', padding: '32px 24px', maxWidth: 720, margin: '0 auto' }}>
+    <div className="perspective-container" style={{ minHeight: '100vh', padding: '32px 24px', maxWidth: 720, margin: '0 auto' }}>
       {/* Header */}
       <div className="fade-up" style={{ marginBottom: 32 }}>
         <button onClick={onBack} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.85rem', fontFamily: "'Inter',sans-serif", marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}>← Back</button>
@@ -87,24 +87,29 @@ export default function ResumeScreening({ initialRole, onStartInterview, onBack 
       {!result ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* File upload */}
-          <div className="glass fade-up" style={{ padding: 24 }}>
-            <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>Resume File (PDF / DOCX / TXT)</label>
+          <div className="glass card-3d fade-up" style={{ padding: 24 }}>
+            <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>1. Upload Resume (PDF / DOCX / TXT)</label>
             <div
               onDrop={handleDrop} onDragOver={e => e.preventDefault()}
               onClick={() => fileRef.current.click()}
-              style={{ border: `2px dashed ${file ? 'rgba(139,92,246,0.6)' : 'var(--border)'}`, borderRadius: 12, padding: '32px 24px', textAlign: 'center', cursor: 'pointer', background: file ? 'rgba(139,92,246,0.06)' : 'transparent', transition: 'var(--transition)' }}
+              style={{ border: `2px dashed ${file ? 'rgba(139,92,246,0.6)' : 'var(--border)'}`, borderRadius: 12, padding: '40px 24px', textAlign: 'center', cursor: 'pointer', background: file ? 'rgba(139,92,246,0.06)' : 'rgba(255,255,255,0.02)', transition: 'var(--transition)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}
             >
-              <div style={{ fontSize: '2rem', marginBottom: 8 }}>{file ? '✅' : '📎'}</div>
-              <p style={{ color: file ? '#c4b5fd' : 'var(--text-muted)', fontSize: '0.9rem', margin: 0 }}>
-                {file ? file.name : 'Drop file here or click to browse'}
+              <div style={{ fontSize: '2.5rem', marginBottom: 4 }}>{file ? '✅' : '📄'}</div>
+              <p style={{ color: file ? '#c4b5fd' : 'var(--text-primary)', fontSize: '1rem', margin: 0, fontWeight: 500 }}>
+                {file ? file.name : 'Drag and drop your resume here'}
               </p>
-              {file && <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: 4 }}>{(file.size / 1024).toFixed(1)} KB</p>}
-              <input ref={fileRef} type="file" accept=".pdf,.docx,.txt" onChange={handleFileChange} style={{ display: 'none' }} />
+              {!file && (
+                <button className="btn-secondary" style={{ pointerEvents: 'none', padding: '6px 16px', fontSize: '0.85rem', marginTop: 8 }}>
+                  Browse Files
+                </button>
+              )}
             </div>
+            {file && <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: 4 }}>{(file.size / 1024).toFixed(1)} KB</p>}
+            <input ref={fileRef} type="file" accept=".pdf,.docx,.txt" onChange={handleFileChange} onClick={e => e.stopPropagation()} style={{ display: 'none' }} />
           </div>
 
           {/* JD input */}
-          <div className="glass fade-up" style={{ padding: 24 }}>
+          <div className="glass card-3d fade-up" style={{ padding: 24 }}>
             <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>Job Description</label>
             <textarea className="input-field" placeholder="Paste the job description here..." value={jdText} onChange={e => setJdText(e.target.value)} style={{ minHeight: 180 }} />
           </div>
@@ -113,7 +118,7 @@ export default function ResumeScreening({ initialRole, onStartInterview, onBack 
             <div style={{ background: 'var(--red-glow)', border: '1px solid var(--red)', borderRadius: 10, padding: '12px 16px', color: '#f87171', fontSize: '0.88rem' }}>{error}</div>
           )}
 
-          <button className="btn-primary" onClick={handleAnalyze} disabled={!file || !jdText.trim() || loading} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+          <button className="btn-primary card-3d" onClick={handleAnalyze} disabled={!file || !jdText.trim() || loading} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
             {loading ? <><span className="spinner" /> Analyzing with NLP...</> : 'Analyze Resume Match →'}
           </button>
         </div>
@@ -121,7 +126,7 @@ export default function ResumeScreening({ initialRole, onStartInterview, onBack 
         /* Results */
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Score card */}
-          <div className="glass pop-in" style={{ padding: '28px 28px', display: 'flex', alignItems: 'center', gap: 28 }}>
+          <div className="glass card-3d pop-in" style={{ padding: '28px 28px', display: 'flex', alignItems: 'center', gap: 28 }}>
             <ScoreCircle score={result.match_score} />
             <div>
               <div style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', marginBottom: 8 }}>
@@ -139,7 +144,7 @@ export default function ResumeScreening({ initialRole, onStartInterview, onBack 
 
           {/* Skills */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-            <div className="glass" style={{ padding: 20 }}>
+            <div className="glass card-3d" style={{ padding: 20 }}>
               <div style={{ fontSize: '0.78rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--green)', marginBottom: 12 }}>
                 Matched Skills ({result.matched_skills.length})
               </div>
@@ -147,7 +152,7 @@ export default function ResumeScreening({ initialRole, onStartInterview, onBack 
                 ? <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>{result.matched_skills.map(s => <span key={s} className="tag tag-green">{s}</span>)}</div>
                 : <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>None detected</p>}
             </div>
-            <div className="glass" style={{ padding: 20 }}>
+            <div className="glass card-3d" style={{ padding: 20 }}>
               <div style={{ fontSize: '0.78rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#f87171', marginBottom: 12 }}>
                 Missing Skills ({result.missing_skills.length})
               </div>
@@ -157,21 +162,21 @@ export default function ResumeScreening({ initialRole, onStartInterview, onBack 
             </div>
           </div>
 
-          {/* N picker + proceed */}
-          <div className="glass" style={{ padding: 20 }}>
-            <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>
-              Interview Questions — <span style={{ color: '#c4b5fd' }}>{n}</span>
-            </label>
-            <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-              {[3, 5, 7, 10].map(num => (
-                <button key={num} onClick={() => setN(num)} style={{ flex: 1, padding: 10, background: n === num ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.03)', border: `1px solid ${n === num ? 'rgba(139,92,246,0.6)' : 'var(--border)'}`, borderRadius: 8, color: n === num ? '#c4b5fd' : 'var(--text-secondary)', fontWeight: n === num ? 700 : 400, fontSize: '0.9rem', cursor: 'pointer', fontFamily: "'Inter',sans-serif", transition: 'var(--transition)' }}>{num}</button>
-              ))}
+          {/* Proceed */}
+          <div className="glass card-3d" style={{ padding: 20 }}>
+            <div style={{ marginBottom: 20, padding: '12px 16px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.3)', borderRadius: 8 }}>
+              <div style={{ color: '#c4b5fd', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>
+                Format: 25 Questions
+              </div>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                20 Multiple Choice + 5 Written Answers
+              </div>
             </div>
             <div style={{ display: 'flex', gap: 12 }}>
-              <button className="btn-primary" onClick={handleProceed} style={{ flex: 1 }}>
+              <button className="btn-primary card-3d" onClick={handleProceed} style={{ flex: 1 }}>
                 Start Interview (JD-Tailored) →
               </button>
-              <button className="btn-secondary" onClick={() => setResult(null)}>Re-analyze</button>
+              <button className="btn-secondary card-3d" onClick={() => setResult(null)}>Re-analyze</button>
             </div>
           </div>
         </div>

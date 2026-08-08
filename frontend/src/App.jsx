@@ -3,6 +3,7 @@ import LandingPage from './components/LandingPage'
 import ResumeScreening from './components/ResumeScreening'
 import InterviewSession from './components/InterviewSession'
 import EvaluationDashboard from './components/EvaluationDashboard'
+import Layout from './components/Layout'
 
 // Phases: 'landing' | 'screening' | 'interview' | 'results'
 export default function App() {
@@ -37,7 +38,7 @@ export default function App() {
   }
 
   return (
-    <>
+    <Layout>
       {phase === 'landing' && (
         <LandingPage
           onStartScreening={handleStartScreening}
@@ -69,6 +70,6 @@ export default function App() {
           onRestart={handleRestart}
         />
       )}
-    </>
+    </Layout>
   )
 }

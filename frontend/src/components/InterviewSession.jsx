@@ -33,7 +33,7 @@ export default function InterviewSession({ role, n, jdContext, sessionId: initia
     fetch('/api/interview/questions/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role, n, jd_context: jdContext || '' }),
+      body: JSON.stringify({ role, jd_context: jdContext || '' }),
     })
       .then(r => { if (!r.ok) throw new Error('Question generation failed'); return r.json() })
       .then(data => {
@@ -42,20 +42,29 @@ export default function InterviewSession({ role, n, jdContext, sessionId: initia
         setLoadingQ(false)
       })
       .catch(e => { setError(e.message); setLoadingQ(false) })
-  }, [role, n, jdContext])
+  }, [role, jdContext])
 
-  const handleSubmitAnswer = async () => {
-    if (!answer.trim() || loadingScore) return
+  const handleSubmitAnswer = async (submittedAnswer = answer) => {
+    if (!submittedAnswer.trim() || loadingScore) return
     setLoadingScore(true)
     setScoreResult(null)
+    const currentQ = questions[current]
     try {
       const res = await fetch('/api/interview/score/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session_id: sessionId, question_number: current + 1, question: questions[current], answer }),
+        body: JSON.stringify({ 
+          session_id: sessionId, 
+          question_number: current + 1, 
+          question: currentQ.text, 
+          answer: submittedAnswer,
+          question_type: currentQ.type || 'text',
+          correct_answer: currentQ.correct_answer || '',
+          options: currentQ.options || []
+        }),
       })
       const result = await res.json()
-      const entry = { question_number: current + 1, question: questions[current], answer, score: result.score, justification: result.justification }
+      const entry = { question_number: current + 1, question: currentQ.text, answer: submittedAnswer, score: result.score, justification: result.justification }
       setTranscript(prev => [...prev, entry])
       setScoreResult(result)
       setAnswered(true)
@@ -109,7 +118,7 @@ export default function InterviewSession({ role, n, jdContext, sessionId: initia
   )
 
   return (
-    <div style={{ minHeight: '100vh', padding: '32px 24px', maxWidth: 680, margin: '0 auto' }}>
+    <div className="perspective-container" style={{ minHeight: '100vh', padding: '32px 24px', maxWidth: 680, margin: '0 auto' }}>
       {/* Top bar */}
       <div style={{ marginBottom: 32 }} className="fade-up">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
@@ -126,27 +135,45 @@ export default function InterviewSession({ role, n, jdContext, sessionId: initia
       </div>
 
       {/* Question */}
-      <div key={current} className="glass fade-up" style={{ padding: 32, marginBottom: 20 }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '100px', padding: '4px 14px', fontSize: '0.75rem', color: '#c4b5fd', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 18 }}>Q{current + 1}</div>
-        <p style={{ fontSize: '1.15rem', lineHeight: 1.7, color: 'var(--text-primary)', fontWeight: 500 }}>{questions[current]}</p>
+      <div key={current} className="glass card-3d fade-up" style={{ padding: 32, marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '100px', padding: '4px 14px', fontSize: '0.75rem', color: '#c4b5fd', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Q{current + 1}</div>
+          {questions[current]?.type === 'mcq' && (
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Multiple Choice</div>
+          )}
+        </div>
+        <p style={{ fontSize: '1.15rem', lineHeight: 1.7, color: 'var(--text-primary)', fontWeight: 500 }}>{questions[current]?.text || questions[current]}</p>
       </div>
 
       {/* Answer */}
       {!answered ? (
         <div className="fade-up" style={{ animationDelay: '0.1s' }}>
           <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Your Answer</label>
-          <textarea className="input-field" placeholder="Type your answer..." value={answer} onChange={e => setAnswer(e.target.value)} style={{ minHeight: 150 }}
-            onKeyDown={e => { if (e.ctrlKey && e.key === 'Enter') handleSubmitAnswer() }} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>Ctrl+Enter to submit</span>
-            <button className="btn-primary" onClick={handleSubmitAnswer} disabled={!answer.trim() || loadingScore} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              {loadingScore ? <><span className="spinner" /> Scoring...</> : 'Submit Answer →'}
-            </button>
-          </div>
+          
+          {questions[current]?.type === 'mcq' ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
+              {questions[current].options?.map((opt, i) => (
+                <button key={i} className="card-3d" onClick={() => { setAnswer(opt); handleSubmitAnswer(opt); }} disabled={loadingScore} style={{ textAlign: 'left', padding: '16px 20px', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', color: 'var(--text-primary)', cursor: loadingScore ? 'not-allowed' : 'pointer', transition: 'var(--transition)', fontFamily: "'Inter', sans-serif", fontSize: '0.95rem' }}>
+                  {opt}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="card-3d">
+              <textarea className="input-field" placeholder="Type your answer..." value={answer} onChange={e => setAnswer(e.target.value)} style={{ minHeight: 150 }}
+                onKeyDown={e => { if (e.ctrlKey && e.key === 'Enter') handleSubmitAnswer() }} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>Ctrl+Enter to submit</span>
+                <button className="btn-primary" onClick={() => handleSubmitAnswer()} disabled={!answer.trim() || loadingScore} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  {loadingScore ? <><span className="spinner" /> Scoring...</> : 'Submit Answer →'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="fade-up">
-          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '16px 20px', marginBottom: 4 }}>
+          <div className="glass card-3d" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '16px 20px', marginBottom: 4 }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Your Answer</div>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>{answer}</p>
           </div>

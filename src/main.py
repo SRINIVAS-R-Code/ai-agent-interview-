@@ -1,5 +1,13 @@
 import json
 import os
+import sys
+
+# Ensure src/ is on the path when run from project root
+SRC_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SRC_DIR)
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
+
 from question_gen import generate_questions
 from evaluator import score_answer, final_evaluation
 
@@ -53,10 +61,11 @@ if __name__ == "__main__":
     role = "Backend Software Engineer"
     transcript, summary = run_interview(role, n_questions=5)
 
-    os.makedirs("../output", exist_ok=True)
-    with open("../output/transcript.json", "w") as f:
+    output_dir = os.path.join(PROJECT_ROOT, "output")
+    os.makedirs(output_dir, exist_ok=True)
+    with open(os.path.join(output_dir, "transcript.json"), "w") as f:
         json.dump(transcript, f, indent=2)
-    with open("../output/evaluation_summary.json", "w") as f:
+    with open(os.path.join(output_dir, "evaluation_summary.json"), "w") as f:
         json.dump(summary, f, indent=2)
 
     print("\nSaved transcript.json and evaluation_summary.json to output/")

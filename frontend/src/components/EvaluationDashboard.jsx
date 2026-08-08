@@ -13,7 +13,7 @@ export default function EvaluationDashboard({ summary, transcript, role, screeni
   }[summary.hire_recommendation] || 'var(--text-muted)'
 
   return (
-    <div style={{ minHeight: '100vh', padding: '40px 24px', maxWidth: 800, margin: '0 auto' }}>
+    <div className="perspective-container" style={{ minHeight: '100vh', padding: '40px 24px', maxWidth: 800, margin: '0 auto' }}>
       {/* Header */}
       <div className="fade-up" style={{ textAlign: 'center', marginBottom: '40px' }}>
         <div style={{ display: 'inline-flex', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '100px', padding: '6px 18px', fontSize: '0.78rem', color: '#c4b5fd', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '20px' }}>
@@ -29,7 +29,7 @@ export default function EvaluationDashboard({ summary, transcript, role, screeni
 
       {/* Combined score row — resume + interview */}
       {screeningResult && (
-        <div className="glass fade-up" style={{ padding: '20px 24px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+        <div className="glass card-3d fade-up" style={{ padding: '20px 24px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', gap: 24, flex: 1, flexWrap: 'wrap' }}>
             <div>
               <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', marginBottom: 4 }}>Resume Match</div>
@@ -53,7 +53,7 @@ export default function EvaluationDashboard({ summary, transcript, role, screeni
 
       {/* Score + Verdict */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 16, marginBottom: 16 }} className="fade-up">
-        <div className="glass" style={{ padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+        <div className="glass card-3d" style={{ padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
           <svg width="140" height="140" viewBox="0 0 140 140">
             <circle cx="70" cy="70" r={r} fill="none" stroke="var(--border)" strokeWidth="10" />
             <circle cx="70" cy="70" r={r} fill="none" stroke={scoreColor} strokeWidth="10" strokeLinecap="round"
@@ -71,7 +71,7 @@ export default function EvaluationDashboard({ summary, transcript, role, screeni
             </div>
           )}
         </div>
-        <div className="glass" style={{ padding: '28px 28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="glass card-3d" style={{ padding: '28px 28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', marginBottom: 12 }}>Overall Verdict</div>
             <p style={{ fontSize: '1rem', color: 'var(--text-primary)', lineHeight: 1.7, marginBottom: 24 }}>{summary.overall_verdict}</p>
@@ -91,7 +91,7 @@ export default function EvaluationDashboard({ summary, transcript, role, screeni
 
       {/* Strengths & Gaps */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }} className="fade-up">
-        <div className="glass" style={{ padding: '24px' }}>
+        <div className="glass card-3d" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
             <span>✅</span><span style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--green)' }}>Strengths</span>
           </div>
@@ -99,18 +99,18 @@ export default function EvaluationDashboard({ summary, transcript, role, screeni
             ? <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>{summary.strengths.map((s, i) => <span key={i} className="tag tag-green" style={{ alignSelf: 'flex-start' }}>✦ {s}</span>)}</div>
             : <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No notable strengths identified.</p>}
         </div>
-        <div className="glass" style={{ padding: '24px' }}>
+        <div className="glass card-3d" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-            <span>🎯</span><span style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#f87171' }}>Areas to Improve</span>
+            <span>⚠️</span><span style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--yellow)' }}>Areas for Improvement</span>
           </div>
-          {summary.gaps?.length > 0
-            ? <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>{summary.gaps.map((g, i) => <span key={i} className="tag tag-red" style={{ alignSelf: 'flex-start' }}>✦ {g}</span>)}</div>
-            : <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No significant gaps found.</p>}
+          {summary.weaknesses?.length > 0
+            ? <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>{summary.weaknesses.map((w, i) => <span key={i} className="tag tag-yellow" style={{ alignSelf: 'flex-start' }}>✦ {w}</span>)}</div>
+            : <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No notable weaknesses identified.</p>}
         </div>
       </div>
 
       {/* Transcript */}
-      <div className="glass fade-up" style={{ padding: '24px', marginBottom: 28 }}>
+      <div className="glass card-3d fade-up" style={{ padding: '24px', marginBottom: 28 }}>
         <div style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', marginBottom: 20 }}>Full Transcript</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {transcript.map(t => {

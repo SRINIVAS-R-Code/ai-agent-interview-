@@ -5,7 +5,7 @@ from .models import InterviewSession, InterviewAnswer
 class InterviewAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = InterviewAnswer
-        fields = ['id', 'question_number', 'question', 'answer', 'score', 'justification', 'created_at']
+        fields = ['id', 'question_number', 'question_type', 'question', 'options', 'correct_answer', 'answer', 'score', 'justification', 'created_at']
 
 
 class InterviewSessionSerializer(serializers.ModelSerializer):

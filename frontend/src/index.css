@@ -34,20 +34,18 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Inter', sans-serif;
-  background: var(--bg-primary);
+  background: url('/background.png') center/cover fixed no-repeat, var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
+  perspective: 1200px; /* Enable 3D space */
 }
 
 body::before {
   content: '';
   position: fixed;
-  top: -30%;
-  left: -20%;
-  width: 60%;
-  height: 60%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65); /* Dark overlay for readability */
   pointer-events: none;
   z-index: 0;
 }
@@ -55,11 +53,8 @@ body::before {
 body::after {
   content: '';
   position: fixed;
-  bottom: -30%;
-  right: -20%;
-  width: 60%;
-  height: 60%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(8, 11, 20, 0.4) 0%, rgba(8, 11, 20, 0.95) 100%);
   pointer-events: none;
   z-index: 0;
 }
@@ -69,18 +64,39 @@ body::after {
   z-index: 1;
 }
 
+/* 3D Wrapper */
+.perspective-container {
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
 /* Glass card */
 .glass {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-radius: var(--radius);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .glass:hover {
-  border-color: rgba(139, 92, 246, 0.25);
-  background: var(--bg-card-hover);
+  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 20px rgba(139, 92, 246, 0.2);
+}
+
+/* 3D Card Hover Effect Class */
+.card-3d {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.card-3d:hover {
+  transform: translateY(-5px) rotateX(4deg) rotateY(-4deg);
+}
+.card-3d > * {
+  transform: translateZ(30px);
 }
 
 /* Gradient text */

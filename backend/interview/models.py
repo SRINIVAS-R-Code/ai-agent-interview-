@@ -27,7 +27,10 @@ class InterviewAnswer(models.Model):
     """One Q&A pair within a session."""
     session = models.ForeignKey(InterviewSession, on_delete=models.CASCADE, related_name='answers')
     question_number = models.IntegerField()
+    question_type = models.CharField(max_length=10, default='text')
     question = models.TextField()
+    options = models.JSONField(default=list, blank=True)
+    correct_answer = models.TextField(blank=True)
     answer = models.TextField()
     score = models.IntegerField(null=True, blank=True)  # 1-10
     justification = models.TextField(blank=True)
@@ -37,4 +40,4 @@ class InterviewAnswer(models.Model):
         ordering = ['question_number']
 
     def __str__(self):
-        return f"Q{self.question_number} — Score: {self.score}/10"
+        return f"Q{self.question_number} ({self.question_type}) — Score: {self.score}/10"
