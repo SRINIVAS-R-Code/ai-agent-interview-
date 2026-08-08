@@ -1,0 +1,36 @@
+Job Title: Senior Backend Software Engineer
+
+Company: TechVenture Inc.
+Location: Remote (Global)
+
+ABOUT THE ROLE
+We are looking for a Senior Backend Engineer to design, build, and scale our core platform APIs.
+You will work closely with product, frontend, and data teams to deliver high-quality, reliable systems.
+
+RESPONSIBILITIES
+- Design and implement RESTful and GraphQL APIs using Python and Django or FastAPI
+- Architect scalable microservices and distributed systems
+- Optimize database performance with PostgreSQL and Redis
+- Implement CI/CD pipelines and maintain infrastructure on AWS
+- Lead code reviews and mentor junior engineers
+- Collaborate with cross-functional teams in an agile environment
+
+REQUIREMENTS
+- 4+ years of professional software engineering experience
+- Strong proficiency in Python and at least one framework (Django, FastAPI, Flask)
+- Deep understanding of REST API design and system design principles
+- Experience with PostgreSQL, MySQL, or MongoDB
+- Hands-on experience with Docker, Kubernetes, and AWS
+- Strong knowledge of Git and CI/CD workflows
+- Understanding of microservices architecture
+- Experience with Redis or other caching solutions
+- Familiarity with agile/scrum methodology
+
+NICE TO HAVE
+- Experience with GraphQL
+- Machine learning or NLP background
+- Open source contributions
+- Experience with Kafka or message queues
+
+TECH STACK
+Python · Django · PostgreSQL · Redis · Docker · Kubernetes · AWS · GitHub Actions · Elasticsearch

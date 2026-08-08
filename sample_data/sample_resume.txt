@@ -1,0 +1,37 @@
+John Smith
+john.smith@email.com | LinkedIn: linkedin.com/in/johnsmith | GitHub: github.com/johnsmith
+
+SUMMARY
+Software Engineer with 4 years of experience building scalable backend systems and REST APIs. Proficient in Python, Django, and PostgreSQL. Strong foundation in system design, algorithms, and agile development practices.
+
+SKILLS
+Languages   : Python, JavaScript, SQL, Bash
+Frameworks  : Django, FastAPI, React, Node.js
+Databases   : PostgreSQL, MySQL, MongoDB, Redis
+Tools       : Docker, Git, GitHub Actions, CI/CD, Linux, AWS (EC2, S3, RDS)
+Concepts    : REST API design, Microservices, System Design, TDD, Agile/Scrum
+
+EXPERIENCE
+Backend Engineer — Acme Corp (2022–Present)
+- Designed and built a Django REST Framework API serving 50K daily requests
+- Reduced database query latency by 40% through PostgreSQL indexing and query optimization
+- Containerized the application using Docker and deployed on AWS EC2
+- Implemented CI/CD pipelines with GitHub Actions, cutting release time by 60%
+- Led migration from monolith to microservices architecture
+
+Junior Developer — StartupXYZ (2020–2022)
+- Built REST APIs using Flask and Python for a SaaS product
+- Implemented Redis caching, improving response times by 35%
+- Wrote unit and integration tests (pytest), achieving 85% code coverage
+- Collaborated with frontend team to design and document API contracts
+
+EDUCATION
+B.Sc. Computer Science — State University (2016–2020)
+GPA: 3.7/4.0 | Data Structures, Algorithms, Operating Systems, Databases
+
+PROJECTS
+Resume Screening Agent — Python, Django, SBERT, Groq LLaMA
+  AI-powered agent combining NLP similarity scoring with LLM-based interview generation
+
+Distributed Task Queue — Python, Redis, Docker
+  Built a custom task queue with retry logic and monitoring dashboard
