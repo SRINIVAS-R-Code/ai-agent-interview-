@@ -21,30 +21,33 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         role = options['role']
-        n_questions = options['questions']
 
         self.stdout.write(f"\n{'='*60}")
         self.stdout.write(f"  INTERVIEW AGENT — Role: {role}")
         self.stdout.write(f"{'='*60}\n")
         self.stdout.write("Generating questions...")
 
-        questions = generate_questions(role, n_questions)
+        questions = generate_questions(role, jd_context="")
         transcript = []
 
-        for i, q in enumerate(questions):
+        for i, q_dict in enumerate(questions):
+            q_text = q_dict.get("text", "")
+            q_type = q_dict.get("type", "written")
             answer = SAMPLE_ANSWERS.get(i, "No answer provided.")
-            result = score_answer(q, answer)
+            result = score_answer(q_text, answer)
             
             entry = {
                 "question_number": i + 1,
-                "question": q,
+                "question": q_text,
                 "answer": answer,
                 "score": result.get("score"),
                 "justification": result.get("justification"),
             }
             transcript.append(entry)
             
-            self.stdout.write(f"Q{i+1}: {q}")
+            self.stdout.write(f"Q{i+1} ({q_type}): {q_text}")
+            if q_type == "mcq":
+                self.stdout.write(f"Options: {q_dict.get('options', [])}")
             self.stdout.write(f"A:  {answer}")
             self.stdout.write(f"Score: {entry['score']}/10 — {entry['justification']}")
             self.stdout.write("-" * 60)
